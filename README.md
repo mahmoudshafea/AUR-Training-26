@@ -1,1 +1,1 @@
-# -AUR-Training-26
+# AUR-Training-26
