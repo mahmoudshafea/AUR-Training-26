@@ -25,9 +25,12 @@ class Stack(QStackedWidget):
 
 
     def start_counter(self):
-        if not self._input.text():
+        if self._timer.isActive():
             return
-        self._time_in=int(self._input.text())
+        if self._time_in==0:
+            if not self._input.text():
+                return
+            self._time_in=int(self._input.text())
         minutes=str(self._time_in//60)
         seconds=str(self._time_in % 60)
         if len(minutes)==1:
@@ -54,6 +57,7 @@ class Stack(QStackedWidget):
         else:
             self._label.setText("00:00")
             self._timer.stop()
+            self._input.clear()
             self.setCurrentIndex(0)
             self.timer_stopped.emit(True)
 
