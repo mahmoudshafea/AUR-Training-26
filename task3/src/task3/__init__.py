@@ -1,2 +1,11 @@
+from PySide6.QtWidgets import QApplication
+
+from task3.window import Window
+
 def main() -> None:
-    print("Hello from task3!")
+    app = QApplication()
+
+    window = Window()
+    window.show()
+
+    app.exec()

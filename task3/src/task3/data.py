@@ -1,61 +1,60 @@
-from PySide6.QtCore import QObject,QTimer,Property,Signal
+from PySide6.QtCore import QObject, QTimer, Property, Signal
 
 
 class MyData(QObject):
-    hours_changed=Signal()
-    minutes_changed=Signal()
-    seconds_changed=Signal()
-    def __init__(self,parent:QObject|None=None):
+    hours_changed = Signal()
+    mins_changed = Signal()
+    secs_changed = Signal()
+
+    def __init__(self, parent: QObject | None = None):
         super().__init__(parent)
 
-        self._timer=QTimer()
+        self._hours_in = 0
+        self._mins_in = 0
+        self._secs_in = 0
+
+        self._timer = QTimer(self)
         self._timer.setInterval(1000)
         self._timer.timeout.connect(self._increment)
+        self._timer.start()
 
-        self._hours_in=0
-        self._minutes_in=0
-        self._seconds_in=0
-
-
-    @Property(int,notify=hours_changed)
-    def hours(self):
+    def get_hours(self):
         return self._hours_in
 
-    @Property(int,notify=minutes_changed)
-    def minutes(self):
-        return self._minutes_in
-
-    @Property(int,notify=seconds_changed)
-    def seconds(self):
-        return self._seconds_in
-
-    @hours.setter
-    def hours(self,data:int):
-        self._hours_in=data
+    def set_hours(self, data: int):
+        self._hours_in = data
         self.hours_changed.emit()
 
-    @minutes.setter
-    def minutes(self,data:int):
-        self._minutes_in=data
-        self.minutes_changed.emit()
+    hours = Property(int, get_hours, set_hours, notify=hours_changed)
 
-    @seconds.setter
-    def seconds(self,data:int):
-        self._seconds_in=data
-        self.seconds_changed.emit()
+    def get_mins(self):
+        return self._mins_in
 
+    def set_mins(self, data: int):
+        self._mins_in = data
+        self.mins_changed.emit()
 
-    
+    mins = Property(int, get_mins, set_mins, notify=mins_changed)
+
+    def get_secs(self):
+        return self._secs_in
+
+    def set_secs(self, data: int):
+        self._secs_in = data
+        self.secs_changed.emit()
+
+    secs = Property(int, get_secs, set_secs, notify=secs_changed)
+
     def _increment(self):
-        self.seconds+=1
-        if self.seconds>=60:
-            self.seconds=0
-            self.minutes+=1
-        if self.minutes>=60:
-            self.minutes=0
-            self.hours+=1
-        if self.hours>=12:
-            self.hours=0
+        self.secs += 1
 
+        if self.secs >= 60:
+            self.secs = 0
+            self.mins += 1
 
-        
+        if self.mins >= 60:
+            self.mins = 0
+            self.hours += 1
+
+        if self.hours >= 12:
+            self.hours = 0
